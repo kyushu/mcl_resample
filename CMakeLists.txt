@@ -15,4 +15,4 @@ add_executable(test_resampling_wheel test_resampling_wheel.cpp)
 add_executable(resampling_wheel 3_resampling_wheel.cpp)
 add_executable(resampling_evaluate 4_resampling_evaluate.cpp)
 
-# add_executable(gnuplot_test gnuplot_test.cpp)
+add_executable(test_gnuplot test_gnuplot.cpp)

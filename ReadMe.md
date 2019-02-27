@@ -3,7 +3,7 @@
 For visualizing particle's motion, i use GnuPlot to plot particles for each iteration
 
 # Prerequisite
-my environment is Ubuntu and you need to install gnuplot
+my environment is Ubuntu and we need to install gnuplot
 ```bash
 sudo apt-get install gnuplot
 ```
@@ -18,3 +18,7 @@ make
 ```
 
 than run `resampling_evaluate` for ploting particle's motion
+```bash
+cd <your_path>/mcl_resample/build
+./resampling_evaluate
+```

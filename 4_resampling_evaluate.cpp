@@ -283,13 +283,13 @@ int main()
     Gnuplot g2;
     g2.set_xrange(0, 100);
     g2.set_yrange(0, 100);
-    Gnuplot g3;
-    g3.set_xrange(0, 100);
-    g3.set_yrange(0, 100);
+    // Gnuplot g3;
+    // g3.set_xrange(0, 100);
+    // g3.set_yrange(0, 100);
 
-    Gnuplot g4;
-    g4.set_xrange(0, 100);
-    g4.set_yrange(0, 100);
+    // Gnuplot g4;
+    // g4.set_xrange(0, 100);
+    // g4.set_yrange(0, 100);
 
     //Iterating 50 times over the set of particles
     int steps = 50;
@@ -357,18 +357,18 @@ int main()
         }
 
         // visualization(n, myrobot, t, p2, p3);
-        g3.remove_tmpfiles();
+        g2.remove_tmpfiles();
         
 
         plot(g2, lmkx, lmky, 5, "lmks");
         plot(g2, p2x, p2y, 1, "p2");
-        plot(g3, lmkx, lmky, 5, "lmks");
-        plot(g3, p3x, p3y, 1, "p3");
-        plot(g4, lmkx, lmky, 5, "lmks");
-        plot(g4, robotx, roboty, 5, "p4");
+        // plot(g3, lmkx, lmky, 5, "lmks");
+        plot(g2, p3x, p3y, 1, "p3");
+        // plot(g4, lmkx, lmky, 5, "lmks");
+        plot(g2, robotx, roboty, 2, "p4");
         g2.reset_plot();
-        g3.reset_plot();
-        g4.reset_plot();
+        // g3.reset_plot();
+        // g4.reset_plot();
         
 
         sleep(1);
