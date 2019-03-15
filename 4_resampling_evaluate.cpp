@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include "gnuplot_i.hpp" //Gnuplot class handles POSIX-Pipe-communikation with Gnuplot
+// #include "gnuplot_i.hpp" //Gnuplot class handles POSIX-Pipe-communikation with Gnuplot
 #include "gnuplot.h"
 
 #include <iostream>
@@ -10,8 +10,9 @@
 #include <stdexcept> // throw errors
 #include <random> //C++ 11 Random Numbers
 
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 
-// namespace plt = matplotlibcpp;
 using namespace std;
 
 // Landmarks
@@ -196,46 +197,13 @@ double max(double arr[], int n)
     return max;
 }
 
-// void visualization(int n, Robot robot, int step, Robot p[], Robot pr[])
-// {
-// 	//Draw the robot, landmarks, particles and resampled particles on a graph
-	
-//     //Graph Format
-//     plt::title("MCL, step " + to_string(step));
-//     plt::xlim(0, 100);
-//     plt::ylim(0, 100);
-
-//     //Draw particles in green
-//     for (int i = 0; i < n; i++) {
-//         plt::plot({ p[i].x }, { p[i].y }, "go");
-//     }
-
-//     //Draw resampled particles in yellow
-//     for (int i = 0; i < n; i++) {
-//         plt::plot({ pr[i].x }, { pr[i].y }, "yo");
-//     }
-
-//     //Draw landmarks in red
-//     for (int i = 0; i < sizeof(landmarks) / sizeof(landmarks[0]); i++) {
-//         plt::plot({ landmarks[i][0] }, { landmarks[i][1] }, "ro");
-//     }
-    
-//     //Draw robot position in blue
-//     plt::plot({ robot.x }, { robot.y }, "bo");
-
-// 	//Save the image and close the plot
-//     plt::save("./Images/Step" + to_string(step) + ".png");
-//     plt::clf();
-// }
-
-void plot(Gnuplot& g, std::vector<double> x, std::vector<double> y, double ptSize, std::string name)
+void plot(cv::Mat& image, std::vector<double> xpos, std::vector<double> ypos, cv::Scalar color, int scale, int radius, int lineType=1)
 {
-    
-    g.set_style("points");
-    g.set_pointsize(ptSize);
-    g.plot_xy(x, y, name);
-    // wait_for_key();
-
+    for (const double x : xpos) {
+        for (const double y : ypos) {
+            cv::circle(image, cv::Point(x*scale, y*scale), radius, color, lineType);
+        }
+    }
 }
 
 void wait_for_key ()
@@ -280,16 +248,9 @@ int main()
     vector<double> z;
 
 
-    Gnuplot g2;
-    g2.set_xrange(0, 100);
-    g2.set_yrange(0, 100);
-    // Gnuplot g3;
-    // g3.set_xrange(0, 100);
-    // g3.set_yrange(0, 100);
-
-    // Gnuplot g4;
-    // g4.set_xrange(0, 100);
-    // g4.set_yrange(0, 100);
+    int scale = 10;
+    int imgW=100*scale;
+    int imgH = 100*scale;
 
     //Iterating 50 times over the set of particles
     int steps = 50;
@@ -356,23 +317,18 @@ int main()
             p3y.push_back(p3[i].y);
         }
 
-        // visualization(n, myrobot, t, p2, p3);
-        g2.remove_tmpfiles();
-        
-
-        plot(g2, lmkx, lmky, 5, "lmks");
-        plot(g2, p2x, p2y, 1, "p2");
-        // plot(g3, lmkx, lmky, 5, "lmks");
-        plot(g2, p3x, p3y, 1, "p3");
-        // plot(g4, lmkx, lmky, 5, "lmks");
-        plot(g2, robotx, roboty, 2, "p4");
-        g2.reset_plot();
-        // g3.reset_plot();
-        // g4.reset_plot();
-        
-
-        sleep(1);
-
+        // cv::Mat image = cv::Mat::zeros(imgW, imgH, CV_8UC3);
+        // cv::Mat m( 3, 10, CV_32FC3, cv::Scalar( 1.0f, 0.0f, 1.0f ) );
+        cv::Mat image(imgW, imgH, CV_8UC3, cv::Scalar( 255, 255, 255 ));
+        plot(image, lmkx, lmky, cv::Scalar(255, 0, 0), scale, 15, -1);
+        plot(image, p2x, p2y, cv::Scalar(0, 255, 0), scale, 10);
+        plot(image, p3x, p3y, cv::Scalar(0, 0, 255), scale, 10);
+        plot(image, robotx, roboty, cv::Scalar(0, 255, 255), scale, 15, -1);
+        cv::imshow("resample", image);
+        char key = cv::waitKey(50);
+        if(key == 27) {
+            break;
+        }
 
     } //End of Steps loop
     return 0;
